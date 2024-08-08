@@ -1,0 +1,126 @@
+create database uber ;
+
+ create table client (
+                    id int primary key,
+                    name varchar(20),
+                    email varchar(20) ,
+                    gender char(1) check ( gender = 'm' or gender = 'f'),
+                    phone varchar(15) unique,
+                    created_at datetime DEFAULT CURRENT_TIMESTAMP
+                       );
+CREATE TABLE driver (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    email VARCHAR(255),
+    gender CHAR(1) CHECK (gender IN ('m', 'f')),
+    phone VARCHAR(10) UNIQUE,
+    driver_license VARCHAR(20) UNIQUE,
+    active BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE trip (
+    id INT PRIMARY KEY,
+
+    client_id INT,
+    FOREIGN KEY (client_id) REFERENCES client(id),
+
+    driver_id INT,
+    FOREIGN KEY (driver_id) REFERENCES driver(id),
+
+    status VARCHAR(20) DEFAULT 'waiting' CHECK (status IN ('waiting', 'in progress', 'complete', 'cancel')),
+    start_location VARCHAR(100),
+    end_location VARCHAR(100),
+    price DOUBLE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+create table review (
+    id int primary key ,
+    trip_id int ,
+    foreign key (trip_id) references trip(id),
+    rating int check (rating >=1 and rating <=5 ),
+    comments varchar(255) );
+
+
+create table car (
+    id int primary key ,
+    driver_id int ,
+    foreign key (driver_id) references driver (id),
+    model_issue int ,
+    registration varchar(20)
+                 );
+
+
+
+INSERT INTO client (id, name, email, gender, phone) VALUES
+(1, 'Hussam', 'hussam@example.com', 'm', '1234567890'),
+(2, 'fahed', 'fahed@example.com', 'm', '0987654321'),
+(3, 'hanen', 'hanen@example.com', 'f', '4323241324')
+
+;
+
+INSERT INTO client (id, name, email, gender, phone) VALUES
+(4,'norah','norah@norah.com','f','04304332233'),
+(10,'mohammed','mohammed@norah.com','m','04304332213');
+
+
+INSERT INTO driver (id, name, email, gender, phone,driver_license) VALUES
+(1, 'ali abdo', 'abdo@example.com', 'm', '5551234567', 'D123456789'),
+(2, 'mustafa qamar', 'qamar@example.com', 'f', '5559876543', 'D987654321');
+
+INSERT INTO driver (id, name, email, gender, phone,driver_license) VALUES
+(3, 'ahmed marzooq', 'am@example.com', 'm', '0432432432', 'D124324324'),
+(4, 'lubnah ahmed', 'la@example.com', 'f', '0576542123', 'D4324324324'),
+(5, 'muhsen jamaah', 'mj@example.com', 'm', '0530234023', 'D987654343324');
+
+
+
+
+
+
+update driver set active = true where name = 'mustafa qamar';
+update driver set active = true WHERE id IN (3, 4);
+
+INSERT INTO trip (id, client_id, driver_id, start_location, end_location, price) VALUES
+(1, 1, 2, 'a', 'b', 25.50),
+(2, 2, 3,  'c', 'd', 45.00);
+update trip set status = 'in progress' where id = 1 ;
+
+INSERT INTO car (id, driver_id, model_issue, registration) VALUES
+(1, 3, 2020, 'ABC123'),
+(2, 4, 2019, 'XYZ789');
+
+INSERT INTO car (id, driver_id, model_issue, registration) VALUES
+(3, 2, 2023, 'JKO342');
+
+
+
+
+delete from driver where active = false;
+delete from trip where id in (1 ,2);
+
+
+INSERT INTO trip (id, client_id, driver_id, start_location, end_location, price) VALUES
+(3, 1, 4, 'jeddah', 'makkeh', 100.50),
+(4, 3, 3,  'riyadh', 'besha', 302.00);
+
+
+update trip set status = 'complete' where id in  (3,4) ;
+update trip set status = 'complete' where id = 2 ;
+
+
+
+INSERT INTO review (id, trip_id, rating, comments) VALUES
+(1, 2, 4, 'Good trip.'),
+(2, 3, 1, 'bad'),
+(3, 4, 5, 'Excellent ');
+
+delete from trip where id = 1 ;
+Select * FROM client;
+Select * FROM driver;
+SELECT * FROM trip;
+SELECT * FROM review;
+SELECT * FROM car;
+
+
